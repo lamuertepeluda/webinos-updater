@@ -1,0 +1,16 @@
+{
+  "name": "webinos-updater",
+  "version": "0.0.1",
+  "description": "Webinos update all",
+  "main": "./webinos_update.js",
+  "author": "Habib Virji  <habib.virji@samsung.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lamuertepeluda/webinos-updater.git"
+  },
+  "directories": {
+  },
+  "dependencies": {
+    "prompt": "*"
+  }
+}
