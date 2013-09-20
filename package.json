@@ -1,12 +1,12 @@
 {
   "name": "webinos-updater",
   "version": "0.0.1",
-  "description": "Webinos update all",
+  "description": "A node.js script to update all webinos repository (and their dependencies) in a folder",
   "main": "./webinos_update.js",
-  "author": "Habib Virji  <habib.virji@samsung.com>",
+  "author": "Vito Macchia  <vito.macchia@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git://github.com/lamuertepeluda/webinos-updater.git"
+    "url": "git@github.com:lamuertepeluda/webinos-updater.git"
   },
   "directories": {
   },
