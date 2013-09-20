@@ -34,10 +34,13 @@ function updateWebinosProject(projectDirectory, dirname, level) {
         console.log(dirname.yellow + " status:", ("up to date").green);
       }
       else {
-        var match = childOutput.match(/remote: Counting objects: (\d)+, done./);
-        if (match && match.index === 0) {
-          updated.push(projectDirectory);
-        }
+        console.log("Updating ---->", dirname.yellow.bold);
+        console.log(childOutput);
+        updated.push(projectDirectory);
+//        var match = childOutput.match(/remote: Counting objects: (\d)+, done./);
+//        if (match && match.index === 0) {
+//          updated.push(projectDirectory);
+//        }
       }
     }
   });
