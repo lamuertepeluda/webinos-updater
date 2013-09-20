@@ -30,7 +30,8 @@ function updateWebinosProject(projectDirectory, dirname, level) {
   updateProc.stdout.on('end', function() {
     if (childOutput.length > 0)
     {
-      if (childOutput.replace(/\r?\n|\r/g, '') === "Already up-to-date.") {
+//      if (childOutput.replace(/\r?\n|\r/g, '') === "Already up-to-date.") {
+      if (childOutput.search("Already up-to-date.") === 0) {
         console.log(dirname.yellow + " status:", ("up to date").green);
       }
       else {
