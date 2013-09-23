@@ -1,3 +1,8 @@
+#!/usr/bin/env node
+/**
+ * Update all webinos repositories
+*/
+
 var fs = require('fs');
 var path = require('path');
 var childProcess = require('child_process');
