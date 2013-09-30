@@ -21,7 +21,7 @@ $node webinos_update
 
 #make_apks
 
-This scripts embeds a webinos app in the webinos apk, so that it will be accessible from your device by opening:
+This script embeds a webinos app in the webinos apk, so that it will be accessible from your device by opening:
 
 localhost:8080/<name> in Chrome from Android
 
