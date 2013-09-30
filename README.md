@@ -5,7 +5,7 @@ A couple of node.js tool scripts to keep all your webinos-* and hub-* repositori
 
 **Setup**
 
-These script assume that all your webinos-related cloned folders are placed under $HOME/WEBINOS/.
+These scripts assume that all your webinos-related cloned folders are placed under $HOME/WEBINOS/.
 
 #webinos-update
 
