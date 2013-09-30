@@ -11,6 +11,8 @@
   "directories": {
   },
   "dependencies": {
-    "prompt": "*"
+    "prompt": "*",
+    "ncp": "*",
+    "remove": "*"
   }
 }
