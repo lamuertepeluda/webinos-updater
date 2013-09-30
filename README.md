@@ -25,6 +25,11 @@ This scripts embeds a webinos app in the webinos apk, so that it will be accessi
 
 localhost:8080/<name> in Chrome from Android
 
+**Usage:**
+```shell
+$node make_apks
+```
+
 This script will build one apk per target device type (usually 'phone' and 'tablet').
 This is a patch to device type not being automatically detected yet. The generated apks will be copied in a deploy directory, e.g. a webserver directory.
 
