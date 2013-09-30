@@ -23,7 +23,7 @@ $node webinos_update
 
 This script embeds a webinos app in the webinos apk, so that it will be accessible from your device by opening:
 
-localhost:8080/<name> in Chrome from Android
+localhost:8080/``<name>`` in Chrome from Android
 
 **Usage:**
 ```shell
@@ -38,7 +38,7 @@ All the configurations are in apk_config.json. Change it accordingly with your s
 
 Most important are:
 
-* deployDirectory: is the destination directory where the generated apk will be copied, with name webinos-<target>.apk
+* deployDirectory: is the destination directory where the generated apk will be copied, with name webinos-``<target>``.apk
 * webinosApps: is an array of webinos applications you wish to embed. For each app configuration, "name" is the destination folder name into android pzp web_root, "path" is the source folder for the app code, and "resources" are files and folder that are to be copied.
 
 
