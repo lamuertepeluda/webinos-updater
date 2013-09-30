@@ -9,7 +9,7 @@ These scripts assume that all your webinos-related cloned folders are placed und
 
 #webinos-update
 
-To change the main directory, please modify line 7 of webinos_update.js
+To change the main directory, just modify update_config.json properly.
 
 The script scans the main directory and tries a git pull on each webinos-* and hub-* folder and their node_modules subfolders, then prompts a short report.
 
