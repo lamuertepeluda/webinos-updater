@@ -80,6 +80,7 @@ var webinosApps = [{
       'dist',
       'css',
       'fonts',
+      'images',
       'movies'
     ]
   }];
