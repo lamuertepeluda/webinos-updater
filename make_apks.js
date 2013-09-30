@@ -56,11 +56,12 @@ var remove = require('remove');
 var settings = JSON.parse(fs.readFileSync('apk_config.json'));
 
 //all webinos-* and hub-* projects must be under this directory
-var WEBINOS_PROJ_DIR = settings.globals.webinosProjectDirectory;//'WEBINOS';
+var WEBINOS_PROJ_DIR = settings.globals.webinosProjectDirectory;
+
 var webinosMainDirectory = path.resolve(process.env.HOME, WEBINOS_PROJ_DIR);
 process.chdir(webinosMainDirectory);
 
-var WEBINOS_ANDROID_DIR = settings.globals.webinosAndroidDirectory; //"webinos-android";
+var WEBINOS_ANDROID_DIR = settings.globals.webinosAndroidDirectory;
 var WEBINOS_ANDROID_DEVSTATUS_CFG_FILE = "node_modules/webinos-api-deviceStatus/config.json";
 var WEBINOS_ANDROID_WEB_ROOT_DIR = "node_modules/webinos-pzp/web_root";
 var WEBINOS_ANDROID_APK = "bin/webinos-android-debug.apk";

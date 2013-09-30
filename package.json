@@ -1,7 +1,7 @@
 {
   "name": "webinos-updater",
   "version": "0.0.1",
-  "description": "A node.js script to update all webinos repository (and their dependencies) in a folder",
+  "description": "Some node.js scripts to update all webinos repository (and their dependencies) in a folder, and to facilitate webinos apk building",
   "main": "./webinos_update.js",
   "author": "Vito Macchia  <vito.macchia@gmail.com>",
   "repository": {

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Update all webinos repositories
-*/
+ */
 
 var fs = require('fs');
 var path = require('path');
@@ -9,7 +9,11 @@ var childProcess = require('child_process');
 
 var prompt = require("prompt");
 
-var WEBINOS_PROJ_DIR = 'WEBINOS'; //all webinos-* and hub-* projects must be under this directory
+var settings = JSON.parse(fs.readFileSync('update_config.json'));
+
+//all webinos-* and hub-* projects must be under this directory
+var WEBINOS_PROJ_DIR = settings.globals.webinosProjectDirectory;
+
 var webinosMainDirectory = path.resolve(process.env.HOME, WEBINOS_PROJ_DIR);
 process.chdir(webinosMainDirectory);
 
