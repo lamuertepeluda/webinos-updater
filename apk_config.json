@@ -1,0 +1,23 @@
+{
+  "globals": {
+    "webinosProjectDirectory": "WEBINOS",
+    "webinosAndroidDirectory": "webinos-android",
+    "deployDirectory": "<your destination folder>"
+  },
+  "targetDeviceTypes": [
+    "tablet",
+    "phone"
+  ],
+  "webinosApps": [{
+      "name": "webinosTV",
+      "path": "hub-webinosMediaCenter/webinosTV",
+      "resources": [
+        "index.html",
+        "dist",
+        "css",
+        "fonts",
+        "images",
+        "movies"
+      ]
+    }]
+}

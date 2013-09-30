@@ -52,39 +52,28 @@ var prompt = require('prompt');
 var ncp = require('ncp').ncp;
 var remove = require('remove');
 
-var WEBINOS_PROJ_DIR = 'WEBINOS'; //all webinos-* and hub-* projects must be under this directory
+//Load settings from config file
+var settings = JSON.parse(fs.readFileSync('apk_config.json'));
+
+//all webinos-* and hub-* projects must be under this directory
+var WEBINOS_PROJ_DIR = settings.globals.webinosProjectDirectory;//'WEBINOS';
 var webinosMainDirectory = path.resolve(process.env.HOME, WEBINOS_PROJ_DIR);
 process.chdir(webinosMainDirectory);
 
-var WEBINOS_ANDROID_DIR = "webinos-android";
+var WEBINOS_ANDROID_DIR = settings.globals.webinosAndroidDirectory; //"webinos-android";
 var WEBINOS_ANDROID_DEVSTATUS_CFG_FILE = "node_modules/webinos-api-deviceStatus/config.json";
 var WEBINOS_ANDROID_WEB_ROOT_DIR = "node_modules/webinos-pzp/web_root";
 var WEBINOS_ANDROID_APK = "bin/webinos-android-debug.apk";
-var DEPLOY_DIR = "/home/vito/Pubblici/webinos";
+var DEPLOY_DIR = settings.globals.deployDirectory;
 
 var devStatusCfgFilePath = path.join(WEBINOS_ANDROID_DIR, WEBINOS_ANDROID_DEVSTATUS_CFG_FILE);
 var webRootPath = path.join(WEBINOS_ANDROID_DIR, WEBINOS_ANDROID_WEB_ROOT_DIR);
 var apkPath = path.join(WEBINOS_ANDROID_DIR, WEBINOS_ANDROID_APK);
 //target device types
-var targetDeviceTypes = [
-  'tablet',
-  'phone'
-];
+var targetDeviceTypes = settings.targetDeviceTypes;
 
 //webinos apps to be included
-var webinosApps = [{
-    name: "webinosTV", //output name
-    path: "hub-webinosMediaCenter/webinosTV", //path
-    resources: [//stuff to be copied in
-      'index.html',
-      'dist',
-      'css',
-      'fonts',
-      'images',
-      'movies'
-    ]
-  }];
-
+var webinosApps = settings.webinosApps;
 
 //Copy stuff into android pzp web_root
 function updateWebApp(webAppCfg, next/*, iter*/) {
