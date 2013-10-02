@@ -2,13 +2,14 @@
   "globals": {
     "webinosProjectDirectory": "WEBINOS",
     "webinosAndroidDirectory": "webinos-android",
-    "deployDirectory": "<your destination folder>"
+    "deployDirectory": "/home/vito/Pubblici/webinos"
   },
   "targetDeviceTypes": [
     "tablet",
     "phone"
   ],
-  "webinosApps": [{
+  "webinosApps": [
+    {
       "name": "webinosTV",
       "path": "hub-webinosMediaCenter/webinosTV",
       "resources": [
@@ -19,5 +20,17 @@
         "images",
         "movies"
       ]
-    }]
+    },
+    {
+      "name": "webinosTV-FH",
+      "path": "hub-webinosMediaCenter-Martin/webinosTV",
+      "resources": [
+        "index.html",
+        "dist",
+        "css",
+        "images",
+        "movies"
+      ]
+    }
+  ]
 }

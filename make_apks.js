@@ -76,28 +76,48 @@ var targetDeviceTypes = settings.targetDeviceTypes;
 //webinos apps to be included
 var webinosApps = settings.webinosApps;
 
+/**
+ * Callback that creates webapp destination directory
+ * under webinos-android pzp web_root
+ * @param {type} webAppDestPath
+ * @param {type} webAppCfg
+ * @param {type} next
+ * @returns {undefined}
+ */
+function createWebAppDirectory(webAppDestPath, webAppCfg, next) {
+  var webAppSrcPath = path.join(webinosMainDirectory, webAppCfg.path);
+  fs.mkdir(webAppDestPath, function(err) {
+    if (err)
+      throw err;
+    for (var i = 0; i < webAppCfg.resources.length; i++) {
+      var src = path.join(webAppSrcPath, webAppCfg.resources[i]);
+      ncp(src, path.join(webAppDestPath, webAppCfg.resources[i]), function(err) {
+        if (err)
+          throw err;
+      });
+    }
+    console.log((webAppCfg.name + " updated...").cyan);
+    if (next) {
+      next();
+    }
+  });
+}
+
+
 //Copy stuff into android pzp web_root
 function updateWebApp(webAppCfg, next/*, iter*/) {
   var webAppDestPath = path.join(webRootPath, webAppCfg.name);
-  var webAppSrcPath = path.join(webinosMainDirectory, webAppCfg.path);
-  remove(webAppDestPath, function(err) {
-    if (err)
-      throw err;
-    fs.mkdir(webAppDestPath, function(err) {
-      if (err)
-        throw err;
-      for (var i = 0; i < webAppCfg.resources.length; i++) {
-        var src = path.join(webAppSrcPath, webAppCfg.resources[i]);
-        ncp(src, path.join(webAppDestPath, webAppCfg.resources[i]), function(err) {
-          if (err)
-            throw err;
-        });
-      }
-      console.log((webAppCfg.name + " updated...").cyan);
-      if (next) {
-        next();
-      }
-    });
+  fs.exists(webAppDestPath, function(exists) {
+    if (exists) {
+      remove(webAppDestPath, function(err) {
+        if (err)
+          throw err;
+        createWebAppDirectory(webAppDestPath, webAppCfg, next);
+      });
+    }
+    else {
+      createWebAppDirectory(webAppDestPath, webAppCfg, next);
+    }
   });
 }
 
