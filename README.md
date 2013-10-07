@@ -30,13 +30,13 @@ localhost:8080/``<name>`` in Chrome from Android
 $node make_apks
 ```
 
-This script will build one apk per target device type (usually 'phone' and 'tablet').
-This is a patch to device type not being automatically detected yet. The generated apks will be copied in a deploy directory, e.g. a webserver directory.
+This script will build one apk per given webinos-android profile name (see [here](https://github.com/webinos/webinos-android#build-webinos-android-with-ant)).
+Device type is now asked by the PZP when enrolling a new device. The generated apks will be copied in a deploy directory, e.g. a webserver directory.
 
 
 All the configurations are in apk_config.json. Change it accordingly with your setup.
 
-Most important are:
+Most important keys are:
 
 * deployDirectory: is the destination directory where the generated apk will be copied, with name webinos-``<target>``.apk
 * webinosApps: is an array of webinos applications you wish to embed. For each app configuration, "name" is the destination folder name into android pzp web_root, "path" is the source folder for the app code, and "resources" are files and folder that are to be copied.
