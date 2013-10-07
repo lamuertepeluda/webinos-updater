@@ -17,7 +17,7 @@ var WEBINOS_PROJ_DIR = settings.globals.webinosProjectDirectory;
 var webinosMainDirectory = path.resolve(process.env.HOME, WEBINOS_PROJ_DIR);
 process.chdir(webinosMainDirectory);
 
-var MAX_DEPTH = 3; //max depth of webinos dependency
+var MAX_DEPTH = 5; //max depth of webinos dependency
 var counter = 0;
 var updated = [];
 

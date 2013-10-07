@@ -4,9 +4,9 @@
     "webinosAndroidDirectory": "webinos-android",
     "deployDirectory": "/home/vito/Pubblici/webinos"
   },
-  "targetDeviceTypes": [
-    "tablet",
-    "phone"
+  "buildProfiles": [
+    "default",
+    "webinostv"
   ],
   "webinosApps": [
     {

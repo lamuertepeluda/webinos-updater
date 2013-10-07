@@ -62,16 +62,19 @@ var webinosMainDirectory = path.resolve(process.env.HOME, WEBINOS_PROJ_DIR);
 process.chdir(webinosMainDirectory);
 
 var WEBINOS_ANDROID_DIR = settings.globals.webinosAndroidDirectory;
-var WEBINOS_ANDROID_DEVSTATUS_CFG_FILE = "node_modules/webinos-api-deviceStatus/config.json";
+var WEBINOS_ANDROID_BUILD_CFG_FILE = "config_profiles.json";
 var WEBINOS_ANDROID_WEB_ROOT_DIR = "node_modules/webinos-pzp/web_root";
 var WEBINOS_ANDROID_APK = "bin/webinos-android-debug.apk";
 var DEPLOY_DIR = settings.globals.deployDirectory;
 
-var devStatusCfgFilePath = path.join(WEBINOS_ANDROID_DIR, WEBINOS_ANDROID_DEVSTATUS_CFG_FILE);
+var buildCfgFilePath = path.join(WEBINOS_ANDROID_DIR, WEBINOS_ANDROID_BUILD_CFG_FILE);
 var webRootPath = path.join(WEBINOS_ANDROID_DIR, WEBINOS_ANDROID_WEB_ROOT_DIR);
 var apkPath = path.join(WEBINOS_ANDROID_DIR, WEBINOS_ANDROID_APK);
-//target device types
-var targetDeviceTypes = settings.targetDeviceTypes;
+
+//Build profiles to be used
+var buildProfiles = settings.buildProfiles;
+//webinos-android config file
+var androidConfig = JSON.parse(fs.readFileSync(buildCfgFilePath));
 
 //webinos apps to be included
 var webinosApps = settings.webinosApps;
@@ -127,9 +130,9 @@ function updateWebApp(webAppCfg, next/*, iter*/) {
  cd $webinosAndroidFolder
  ant anode clean debug
  */
-function buildApk(target, onEnd) {
-  console.log(("Starting build for " + target).yellow);
-  var buildProcess = childProcess.spawn('ant', ['anode', 'clean', 'debug'], {
+function buildApk(profileName, onEnd) {
+  console.log(("Starting build for profile:" + profileName).yellow);
+  var buildProcess = childProcess.spawn('ant', ['anode', 'webinos-deps', '-Ddevice=' + profileName, 'clean', 'debug'], {
     cwd: WEBINOS_ANDROID_DIR
   });
   buildProcess.stdout.setEncoding('utf8');
@@ -146,14 +149,10 @@ function buildApk(target, onEnd) {
   });
   buildProcess.stdout.on('end', function() {
     console.log('***********************************************'.rainbow.bold);
-//    if (childOutput.length > 0)
-//    {
-//      console.log(("Anode Build Completed").green, childOutput);
-//    }
   });
 
   buildProcess.on('close', function() {
-    console.log(("Build for " + target + " completed").green.bold);
+    console.log(("Build for profile:" + profileName + " completed").green.bold);
     if (onEnd) {
       onEnd();
     }
@@ -162,38 +161,27 @@ function buildApk(target, onEnd) {
 }
 
 
-
-function buildApplicationForTarget(targetDeviceType, onEnd) {
-  //change config file
-  var androidConfig = JSON.parse(fs.readFileSync(devStatusCfgFilePath));
-  androidConfig.params.devicetype = targetDeviceType;
-  fs.writeFile(devStatusCfgFilePath, JSON.stringify(androidConfig), function() {
-    //build anode
-    buildApk(targetDeviceType, function() {
-      var deployPath = path.join(DEPLOY_DIR, 'webinos-' + targetDeviceType + '.apk');
-      //move product to deploy dir
-      fs.rename(apkPath, deployPath, function() {
-        if (onEnd)
-        {
-          onEnd();
-        }
+function buildApplications() {
+  var profileActions = [];
+  buildProfiles.forEach(function(profile) {
+    profileActions.push(function(elem, next) {
+      console.log(("gonna build application for " + profile).magenta.bold);
+      buildApk(profile, function() {
+        var deployPath = path.join(DEPLOY_DIR, 'webinos-' + profile + '.apk');
+        //move product to deploy dir
+        fs.rename(apkPath, deployPath, function() {
+          if (next)
+          {
+            next();
+          }
+        });
       });
     });
   });
-}
-
-function buildApplications() {
-  var targetActions = [];
-  targetDeviceTypes.forEach(function(target) {
-    targetActions.push(function(elem, next) {
-      console.log(("gonna build application for " + target).magenta.bold);
-      buildApplicationForTarget(target, next);
-    });
-  });
-  targetActions.push(function() { //finally
+  profileActions.push(function() { //finally
     console.log(("All .apk files built ...").yellow.bold);
   });
-  doSequentially(targetActions, targetDeviceTypes);
+  doSequentially(profileActions, buildProfiles);
 }
 
 
