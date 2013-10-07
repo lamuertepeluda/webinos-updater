@@ -23,7 +23,7 @@
     },
     {
       "name": "webinosTV-FH",
-      "path": "hub-webinosMediaCenter-Martin/webinosTV",
+      "path": "hub-webinosMediaCenter-Fraunhofer/webinosTV",
       "resources": [
         "index.html",
         "dist",

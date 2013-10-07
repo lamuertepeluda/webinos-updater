@@ -63,11 +63,13 @@ process.chdir(webinosMainDirectory);
 
 var WEBINOS_ANDROID_DIR = settings.globals.webinosAndroidDirectory;
 var WEBINOS_ANDROID_BUILD_CFG_FILE = "config_profiles.json";
+var WEBINOS_ANDROID_NODE_MODULES = "node_modules";
 var WEBINOS_ANDROID_WEB_ROOT_DIR = "node_modules/webinos-pzp/web_root";
 var WEBINOS_ANDROID_APK = "bin/webinos-android-debug.apk";
 var DEPLOY_DIR = settings.globals.deployDirectory;
 
 var buildCfgFilePath = path.join(WEBINOS_ANDROID_DIR, WEBINOS_ANDROID_BUILD_CFG_FILE);
+var androidNodeModulesPath = path.join(WEBINOS_ANDROID_DIR, WEBINOS_ANDROID_NODE_MODULES);
 var webRootPath = path.join(WEBINOS_ANDROID_DIR, WEBINOS_ANDROID_WEB_ROOT_DIR);
 var apkPath = path.join(WEBINOS_ANDROID_DIR, WEBINOS_ANDROID_APK);
 
@@ -124,40 +126,97 @@ function updateWebApp(webAppCfg, next/*, iter*/) {
   });
 }
 
-
-/*
- *
- cd $webinosAndroidFolder
- ant anode clean debug
+/**
+ * Run NPM Install into webinos-android
+ * @param {type} config - empty obj
+ * @param {type} next
+ * @returns {undefined}
  */
-function buildApk(profileName, onEnd) {
-  console.log(("Starting build for profile:" + profileName).yellow);
-  var buildProcess = childProcess.spawn('ant', ['anode', 'webinos-deps', '-Ddevice=' + profileName, 'clean', 'debug'], {
+function updateNPM(config, next) {
+  var npmProcess = childProcess.spawn('npm', ['install'], {
     cwd: WEBINOS_ANDROID_DIR
   });
-  buildProcess.stdout.setEncoding('utf8');
-  buildProcess.on('error', function(err) {
-    console.log(("Anode Build Error").red, err);
+  npmProcess.stdout.setEncoding('utf8');
+  npmProcess.on('error', function(err) {
+    console.log(("npm install error:").red, err);
   });
 
+  npmProcess.on('close', function() {
+    console.log(("npm install completed").blue.bold);
+    if (next) {
+      next();
+    }
+  });
+}
+
+/**
+ *  cd $webinosAndroidFolder
+ *  ant anode webinos-deps -Ddevice=profileName clean debug
+ * @param {type} profileName
+ * @param {type} onEnd
+ * @returns {undefined}
+ */
+function _buildApk(profileName, onEnd) {
+  console.log(("webinos-android clean!").yellow);
+  //Copy web applications into web_root folder
+  var actions = [];
+  actions.push(updateNPM);
+  webinosApps.forEach(function() {
+    actions.push(updateWebApp);
+  });
+  actions.push(
+    function() { //finally
+      console.log(("All web apps copied into web_root and up-to-date...").cyan.bold);
+      console.log(("Starting build for profile:" + profileName).yellow);
+      var buildProcess = childProcess.spawn('ant', ['anode', 'webinos-deps', '-Ddevice=' + profileName, 'clean', 'debug'], {
+        cwd: WEBINOS_ANDROID_DIR
+      });
+      buildProcess.stdout.setEncoding('utf8');
+      buildProcess.on('error', function(err) {
+        console.log(("Anode Build Error").red, err);
+      });
+
 //  var childOutput = '';
-  buildProcess.stdout.on('data', function(chunk) {
-    console.log(chunk);
+      buildProcess.stdout.on('data', function(chunk) {
+        console.log(chunk);
 //    if (chunk) {
 //      childOutput += chunk;
 //    }
-  });
-  buildProcess.stdout.on('end', function() {
-    console.log('***********************************************'.rainbow.bold);
-  });
+      });
+      buildProcess.stdout.on('end', function() {
+        console.log('***********************************************'.rainbow.bold);
+      });
 
-  buildProcess.on('close', function() {
-    console.log(("Build for profile:" + profileName + " completed").green.bold);
-    if (onEnd) {
-      onEnd();
+      buildProcess.on('close', function() {
+        console.log(("Build for profile:" + profileName + " completed").green.bold);
+        if (onEnd) {
+          onEnd();
+        }
+      });
+    });
+  //first action doesn't require a config object
+  doSequentially(actions, [{}].concat(webinosApps));
+}
+
+
+/*
+ *
+ * clean and build apk
+ */
+function buildApk(profileName, onEnd) {
+  fs.exists(androidNodeModulesPath, function(exists) {
+    if (exists) {
+      //Remove node_modules (safest way to clean anode)
+      remove(androidNodeModulesPath, function(err) {
+        if (err)
+          throw err;
+        _buildApk(profileName, onEnd);
+      });
+    }
+    else {
+      _buildApk(profileName, onEnd);
     }
   });
-
 }
 
 
@@ -187,17 +246,18 @@ function buildApplications() {
 
 //main
 function main() {
-  //1 - prepare web content
-  var actions = [];
-  webinosApps.forEach(function() {
-    actions.push(updateWebApp);
-  });
-  actions.push(
-    function() { //finally
-      console.log(("All web apps updated...").cyan.bold);
-      buildApplications();
-    });
-  doSequentially(actions, webinosApps);
+  buildApplications();
+//  //1 - prepare web content
+//  var actions = [];
+//  webinosApps.forEach(function() {
+//    actions.push(updateWebApp);
+//  });
+//  actions.push(
+//    function() { //finally
+//      console.log(("All web apps updated...").cyan.bold);
+//      buildApplications();
+//    });
+//  doSequentially(actions, webinosApps);
 }
 
 main();
