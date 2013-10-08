@@ -94,12 +94,20 @@ function createWebAppDirectory(webAppDestPath, webAppCfg, next) {
   fs.mkdir(webAppDestPath, function(err) {
     if (err)
       throw err;
-    for (var i = 0; i < webAppCfg.resources.length; i++) {
-      var src = path.join(webAppSrcPath, webAppCfg.resources[i]);
-      ncp(src, path.join(webAppDestPath, webAppCfg.resources[i]), function(err) {
+    var resourcesLength = webAppCfg.resources.length;
+    if (resourcesLength === 1 && webAppCfg.resources[0] === '*') {
+      ncp(webAppSrcPath, webAppDestPath, function(err) {
         if (err)
           throw err;
       });
+    } else {
+      for (var i = 0; i < resourcesLength; i++) {
+        var src = path.join(webAppSrcPath, webAppCfg.resources[i]);
+        ncp(src, path.join(webAppDestPath, webAppCfg.resources[i]), function(err) {
+          if (err)
+            throw err;
+        });
+      }
     }
     console.log((webAppCfg.name + " updated...").cyan);
     if (next) {

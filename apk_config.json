@@ -11,14 +11,9 @@
   "webinosApps": [
     {
       "name": "webinosTV",
-      "path": "hub-webinosMediaCenter/webinosTV",
+      "path": "hub-webinosMediaCenter/webinosTV/dist",
       "resources": [
-        "index.html",
-        "dist",
-        "css",
-        "fonts",
-        "images",
-        "movies"
+        "*"
       ]
     },
     {
